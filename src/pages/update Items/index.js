@@ -6,11 +6,13 @@ import { v4 as uuidv4 } from "uuid";
 import { db, storage } from "../../firebase.config";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "./addItems.css";
+import "./updateItems.css";
 
-import { collection, addDoc, Timestamp, doc, getDoc } from 'firebase/firestore'
+import { collection, addDoc, Timestamp, doc, getDoc, updateDoc, deleteDoc } from 'firebase/firestore'
 import { ref, uploadBytes } from "firebase/storage";
 import { useParams } from "react-router-dom";
+import { useHistory } from "react-router-dom";
+
 
 const initialState = {
   name: "",
@@ -19,10 +21,31 @@ const initialState = {
   inStock: false,
   image: "",
 };
-function AddItems() {
+function UpdateItems() {
   const [data, setData] = useState(initialState);
   const [inStock, setinStock] = useState(false);
-  
+  const { category, id } = useParams();
+
+
+  async function GetData() {
+
+    const docRef = doc(db, category, id);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      setData(docSnap.data())
+      console.log("Document data:", docSnap.data());
+    } else {
+      // doc.data() will be undefined in this case
+      console.log("No such document!");
+    }
+  }
+
+  useEffect(() => {
+    GetData()
+  }, { id })
+
+
   const handleChange = (event) => {
     if (event)
       if (typeof event === "string" || !event) {
@@ -62,17 +85,14 @@ function AddItems() {
 
       uploadBytes(storageRef, data?.image).then(async (snapshot) => {
         console.log(snapshot.metadata)
-        await addDoc(collection(db, data?.category), {
+        await updateDoc(doc(db, category, id), {
           name: data?.name,
           price: data?.price,
-          category: data?.category,
           inStock: data?.inStock,
-          image: snapshot.metadata.name,
+          image: snapshot.metadata ? snapshot.metadata.name : data?.image,
           created: Timestamp.now()
         }).then(() => {
-          toast("Your Item Was Added")
-          setData(initialState)
-
+          toast("Your Item Was Updated")
         }).catch((err) => toast(err))
       });
 
@@ -82,10 +102,20 @@ function AddItems() {
       alert(err)
     }
   }
+  const history = useHistory();
+
   return (
     <div className="container">
       <ToastContainer />
-      <div className="AddItemsForm">
+      <div className="updateItemsForm">
+        <Button variant="primary" type="submit" onClick={async () => {
+          await deleteDoc(doc(db, category, id)).then(() => {
+            toast("Item Was Deleted")
+            history.push(`/category/${category}`);
+          }).catch((err) => toast(err));
+        }}>
+          Delete Item
+        </Button>
         <Form onSubmit={onSubmit}>
           <Form.Group className="mb-3" controlId="formBasicEmail">
             <Form.Label>Item Name</Form.Label>
@@ -118,6 +148,7 @@ function AddItems() {
               name="category"
               onChange={handleChange}
               value={data.category}
+              disabled
             >
               <option>Category</option>
               <option value="One">One</option>
@@ -159,4 +190,4 @@ function AddItems() {
   );
 }
 
-export default AddItems;
+export default UpdateItems;
