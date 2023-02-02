@@ -17,7 +17,7 @@ import {
   updateDoc,
   deleteDoc,
 } from "firebase/firestore";
-import { ref, uploadBytes } from "firebase/storage";
+import { ref, uploadBytes, deleteObject } from "firebase/storage";
 import { useParams } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 
@@ -33,7 +33,7 @@ function UpdateItems() {
   const [inStock, setinStock] = useState(false);
   const { category, id } = useParams();
 
-  const [image, setImage] = useState()
+  const [image, setImage] = useState();
 
   async function GetData() {
     const docRef = doc(db, category, id);
@@ -48,10 +48,12 @@ function UpdateItems() {
     }
   }
 
-  useEffect(() => {
-    GetData();
-  }, { id })
-
+  useEffect(
+    () => {
+      GetData();
+    },
+    { id }
+  );
 
   const handleChange = (event) => {
     if (event)
@@ -88,7 +90,10 @@ function UpdateItems() {
 
   const handleSubmit = async () => {
     try {
-      const storageRef = ref(storage, `images/${Math.random() * 100} ${data?.image?.name}`);
+      const storageRef = ref(
+        storage,
+        `images/${Math.random() * 100} ${data?.image?.name}`
+      );
       if (image) {
         deleteObject(storageRef, image).then(() => {
           uploadBytes(storageRef, image).then(async (snapshot) => {
@@ -97,24 +102,27 @@ function UpdateItems() {
               price: data?.price,
               inStock: data?.inStock,
               image: snapshot.metadata ? snapshot.metadata.name : data?.image,
-              created: Timestamp.now()
-            }).then(() => {
-              toast("Your Item Was Updated")
-            }).catch((err) => toast(err))
+              created: Timestamp.now(),
+            })
+              .then(() => {
+                toast("Your Item Was Updated");
+              })
+              .catch((err) => toast(err));
           });
-        })
+        });
       } else {
         await updateDoc(doc(db, category, id), {
           name: data?.name,
           price: data?.price,
           inStock: data?.inStock,
           image: data?.image,
-          created: Timestamp.now()
-        }).then(() => {
-          toast("Your Item Was Updated")
-        }).catch((err) => toast(err))
+          created: Timestamp.now(),
+        })
+          .then(() => {
+            toast("Your Item Was Updated");
+          })
+          .catch((err) => toast(err));
       }
-
     } catch (err) {
       console.log(err);
       alert(err);
@@ -178,14 +186,16 @@ function UpdateItems() {
           </Form.Group>
 
           <Form.Group controlId="formFile" className="mb-3">
-            <Form.Label>Image Upload : - {image?.name ? image?.name : data?.image}</Form.Label>
+            <Form.Label>
+              Image Upload : - {image?.name ? image?.name : data?.image}
+            </Form.Label>
             <Form.Control
               type="file"
               name="image"
               onChange={(e) => setImage(e.target.files[0])}
               accept=".jpg,.png,.jpeg"
               required
-            // value={image}
+              // value={image}
             />
           </Form.Group>
           <div style={{ display: "flex", justifyContent: "space-around" }}>

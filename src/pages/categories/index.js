@@ -18,6 +18,7 @@ function Food() {
   const [data, setData] = useState([]);
   const [CategoryName, setCategoryName] = useState([]);
   const [isLoading, setisLoading] = useState(false);
+  const [noDataFound, setnoDataFound] = useState(false);
 
   async function GetCategoryName() {
     const docRef = doc(db, "Categories", category);
@@ -28,16 +29,17 @@ function Food() {
     }
   }
 
-  useEffect(
-    () => {
-      GetCategoryName();
-    },
-    { category }
-  );
+  useEffect(() => {
+    GetCategoryName();
+  }, [category]);
 
   async function GetData() {
     const docSnap = await getDocs(collection(db, category));
     const Product = [...data];
+    console.log(Product.length, "00000000000000");
+    if (Product.length === 0) {
+      setnoDataFound(true);
+    }
     docSnap.forEach((doc) => {
       if (Product.filter((a) => a?.id == doc?.id).length == 0) {
         Product.push({ id: doc?.id, ...doc.data() });
@@ -63,48 +65,57 @@ function Food() {
         <img src={Wave} alt="wave" />
       </div>
       <div className="cardMainClass">
-        <Container>
-          <Row>
-            {data?.length > 0 ? (
-              data.map((a) => {
-                return (
-                  <Col sm={4} key={a?.id}>
-                    {" "}
-                    <div
-                      className="cardClass"
-                      onClick={() =>
-                        history.push(`/update-items/${category}/${a?.id}`)
-                      }
-                    >
-                      <Card style={{ width: "18rem" }}>
-                        <Card.Img
-                          variant="top"
-                          onClick={() =>
-                            history.push(`/update-items/${category}/${a?.id}`)
-                          }
-                          src={`https://firebasestorage.googleapis.com/v0/b/dragons-staking-frontend.appspot.com/o/images%2F${a?.image}?alt=media`}
-                        />
-                        <Card.Body>
-                          <Card.Title>{a?.name}</Card.Title>
-                        </Card.Body>
-                        <ListGroup className="list-group-flush">
-                          <ListGroup.Item>
-                            Category: {CategoryName}
-                          </ListGroup.Item>
-                          <ListGroup.Item>
-                            {a?.inStock ? "In " : "Out of "} Stock
-                          </ListGroup.Item>
-                        </ListGroup>
-                      </Card>
-                    </div>
-                  </Col>
-                );
-              })
-            ) : (
-              <h1>No Data Found For This Category</h1>
-            )}
-          </Row>
-        </Container>
+        {isLoading ? (
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <FadeLoader color="black" />
+          </div>
+        ) : (
+          <Container>
+            <Row>
+              {data?.length > 0 ? (
+                data.map((a) => {
+                  return (
+                    <Col sm={4} key={a?.id}>
+                      {" "}
+                      <div
+                        className="cardClass"
+                        onClick={() =>
+                          history.push(`/update-items/${category}/${a?.id}`)
+                        }
+                      >
+                        <Card style={{ width: "18rem" }}>
+                          <Card.Img
+                            variant="top"
+                            style={{ cursor: "pointer" }}
+                            onClick={() =>
+                              history.push(`/update-items/${category}/${a?.id}`)
+                            }
+                            src={`https://firebasestorage.googleapis.com/v0/b/dragons-staking-frontend.appspot.com/o/images%2F${a?.image}?alt=media`}
+                          />
+                          <Card.Body>
+                            <Card.Title>{a?.name}</Card.Title>
+                          </Card.Body>
+                          <ListGroup className="list-group-flush">
+                            <ListGroup.Item>
+                              Category: {CategoryName}
+                            </ListGroup.Item>
+                            <ListGroup.Item>
+                              {a?.inStock ? "In " : "Out of "} Stock
+                            </ListGroup.Item>
+                          </ListGroup>
+                        </Card>
+                      </div>
+                    </Col>
+                  );
+                })
+              ) : (
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                  {noDataFound ? <h1>No Data Found For This Category</h1> : ""}
+                </div>
+              )}
+            </Row>
+          </Container>
+        )}
       </div>
     </div>
   );
