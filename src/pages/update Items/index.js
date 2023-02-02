@@ -182,30 +182,30 @@ function UpdateItems() {
               //   value={data.image}
             />
           </Form.Group>
-          <div style={{ display: "flex" }}>
+          <div style={{ display: "flex", justifyContent: "space-around" }}>
             <Button
-              variant="primary"
+              // variant="primary"
+              style={{ backgroundColor: "green", borderColor: "green" }}
               type="submit"
               onClick={() => handleSubmit()}
             >
-              Submit
+              Update
+            </Button>
+            <Button
+              style={{ backgroundColor: "red", borderColor: "red" }}
+              type="submit"
+              onClick={async () => {
+                await deleteDoc(doc(db, category, id))
+                  .then(() => {
+                    toast("Item Was Deleted");
+                    history.push(`/category/${category}`);
+                  })
+                  .catch((err) => toast(err));
+              }}
+            >
+              Delete Item
             </Button>
           </div>
-
-          <Button
-            variant="primary"
-            type="submit"
-            onClick={async () => {
-              await deleteDoc(doc(db, category, id))
-                .then(() => {
-                  toast("Item Was Deleted");
-                  history.push(`/category/${category}`);
-                })
-                .catch((err) => toast(err));
-            }}
-          >
-            Delete Item
-          </Button>
         </Form>
       </div>
     </div>
