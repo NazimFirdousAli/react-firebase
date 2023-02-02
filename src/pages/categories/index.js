@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Wave from "../../assests/wave.png";
+import inStock from "../../assests/instock.png";
+
 import "./index.css";
 import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
@@ -83,10 +85,29 @@ function Food() {
                           history.push(`/update-items/${category}/${a?.id}`)
                         }
                       >
-                        <Card style={{ width: "18rem" }}>
+                        <Card style={{ width: "18rem", marginBottom:"15%" }}>
+                          {a?.inStock ? (
+                            <img
+                              src={inStock}
+                              alt="instock"
+                              style={{
+                                width: "30%",
+                                position: "absolute",
+                                zIndex: 1,
+                                marginLeft: "-15%",
+                              }}
+                            />
+                          ) : (
+                            ""
+                          )}
                           <Card.Img
                             variant="top"
-                            style={{ cursor: "pointer" }}
+                            style={{
+                              cursor: "pointer",
+                              width: "100%",
+                              height: "200px",
+                              objectFit: "contain",
+                            }}
                             onClick={() =>
                               history.push(`/update-items/${category}/${a?.id}`)
                             }
@@ -97,10 +118,10 @@ function Food() {
                           </Card.Body>
                           <ListGroup className="list-group-flush">
                             <ListGroup.Item>
-                              Category: {CategoryName}
+                              <b>Category:</b> {CategoryName}
                             </ListGroup.Item>
                             <ListGroup.Item>
-                              {a?.inStock ? "In " : "Out of "} Stock
+                              <b>Price:</b> ${a?.price}
                             </ListGroup.Item>
                           </ListGroup>
                         </Card>

@@ -9,8 +9,6 @@ import "react-toastify/dist/ReactToastify.css";
 import "./updateItems.css";
 
 import {
-  collection,
-  addDoc,
   Timestamp,
   doc,
   getDoc,
@@ -18,6 +16,7 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 import { ref, uploadBytes, deleteObject } from "firebase/storage";
+import bin from "../../assests/bin.png";
 import { useParams } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 
@@ -31,9 +30,11 @@ const initialState = {
 function UpdateItems() {
   const [data, setData] = useState(initialState);
   const [inStock, setinStock] = useState(false);
+  const [isLoading, setisLoading] = useState(false);
   const { category, id } = useParams();
 
   const [image, setImage] = useState();
+  const history = useHistory();
 
   async function GetData() {
     const docRef = doc(db, category, id);
@@ -47,6 +48,8 @@ function UpdateItems() {
       console.log("No such document!");
     }
   }
+
+  console.log(image, data.image, "imageimage");
 
   useEffect(
     () => {
@@ -84,31 +87,30 @@ function UpdateItems() {
   };
 
   const onSubmit = async (e) => {
-    e.preventDefault();
     console.log(data);
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setisLoading(true);
     try {
       const storageRef = ref(
         storage,
         `images/${Math.random() * 100} ${data?.image?.name}`
       );
       if (image) {
-        deleteObject(storageRef, image).then(() => {
-          uploadBytes(storageRef, image).then(async (snapshot) => {
-            await updateDoc(doc(db, category, id), {
-              name: data?.name,
-              price: data?.price,
-              inStock: data?.inStock,
-              image: snapshot.metadata ? snapshot.metadata.name : data?.image,
-              created: Timestamp.now(),
+        uploadBytes(storageRef, image).then(async (snapshot) => {
+          await updateDoc(doc(db, category, id), {
+            name: data?.name,
+            price: data?.price,
+            inStock: data?.inStock,
+            image: snapshot.metadata ? snapshot.metadata.name : data?.image,
+            created: Timestamp.now(),
+          })
+            .then(() => {
+              toast("Your Item Was Updated", { autoClose: 1000 });
             })
-              .then(() => {
-                toast("Your Item Was Updated");
-              })
-              .catch((err) => toast(err));
-          });
+            .catch((err) => toast(err));
         });
       } else {
         await updateDoc(doc(db, category, id), {
@@ -119,7 +121,8 @@ function UpdateItems() {
           created: Timestamp.now(),
         })
           .then(() => {
-            toast("Your Item Was Updated");
+            history.push(`/category/${category}`);
+            toast("Your Item is Updated", 1);
           })
           .catch((err) => toast(err));
       }
@@ -127,14 +130,14 @@ function UpdateItems() {
       console.log(err);
       alert(err);
     }
+    setisLoading(false);
   };
-  const history = useHistory();
 
   return (
-    <div className="container">
+    <div>
       <ToastContainer />
       <div className="updateItemsForm">
-        <Form onSubmit={onSubmit}>
+        <Form onSubmit={handleSubmit}>
           <Form.Group className="mb-3" controlId="formBasicEmail">
             <Form.Label>Item Name</Form.Label>
             <Form.Control
@@ -143,6 +146,7 @@ function UpdateItems() {
               name="name"
               value={data.name}
               onChange={handleChange}
+              required
             />
             {/* <Form.Text className="text-muted">
               We'll never share your email with anyone else.
@@ -152,11 +156,12 @@ function UpdateItems() {
           <Form.Group className="mb-3" controlId="formBasicEmail">
             <Form.Label>Price</Form.Label>
             <Form.Control
-              type="text"
+              type="number"
               placeholder="$XX"
               name="price"
               value={data.price}
               onChange={handleChange}
+              required
             />
           </Form.Group>
 
@@ -167,8 +172,10 @@ function UpdateItems() {
               onChange={handleChange}
               value={data.category}
               disabled
+              style={{ cursor: "not-allowed" }}
+              required
             >
-              <option>Category</option>
+              <option>{data.category}</option>
               <option value="One">One</option>
               <option value="Two">Two</option>
               <option value="Three">Three</option>
@@ -186,24 +193,35 @@ function UpdateItems() {
           </Form.Group>
 
           <Form.Group controlId="formFile" className="mb-3">
-            <Form.Label>
-              Image Upload : - {image?.name ? image?.name : data?.image}
-            </Form.Label>
-            <Form.Control
-              type="file"
-              name="image"
-              onChange={(e) => setImage(e.target.files[0])}
-              accept=".jpg,.png,.jpeg"
-              required
-              // value={image}
-            />
+            {data.image ? (
+              <Form.Label>
+                Image Upload : - {image?.name ? image?.name : data?.image}
+                <img
+                  src={bin}
+                  alt="bin"
+                  width="8%"
+                  onClick={() => {
+                    setData({ ...data, image: "" });
+                  }}
+                />
+              </Form.Label>
+            ) : (
+              <Form.Control
+                type="file"
+                name="image"
+                onChange={(e) => setImage(e.target.files[0])}
+                accept=".jpg,.png,.jpeg"
+                required={image?.name}
+                // value={image}
+              />
+            )}
           </Form.Group>
           <div style={{ display: "flex", justifyContent: "space-around" }}>
             <Button
               // variant="primary"
               style={{ backgroundColor: "green", borderColor: "green" }}
               type="submit"
-              onClick={() => handleSubmit()}
+              disabled={isLoading}
             >
               Update
             </Button>
@@ -211,13 +229,16 @@ function UpdateItems() {
               style={{ backgroundColor: "red", borderColor: "red" }}
               type="submit"
               onClick={async () => {
+                setisLoading(true);
                 await deleteDoc(doc(db, category, id))
                   .then(() => {
                     toast("Item Was Deleted");
                     history.push(`/category/${category}`);
                   })
                   .catch((err) => toast(err));
+                setisLoading(false);
               }}
+              disabled={isLoading}
             >
               Delete Item
             </Button>

@@ -58,12 +58,12 @@ function AddItems({ Categories, GetCategories }) {
       }
   };
 
-  const onSubmit = async (e) => {
-    e.preventDefault();
-    console.log(data);
-  };
+  // const onSubmit = async (e) => {
+  //   console.log(data);
+  // };
 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
     try {
       const storageRef = ref(
         storage,
@@ -74,14 +74,14 @@ function AddItems({ Categories, GetCategories }) {
         console.log(snapshot.metadata);
         await addDoc(collection(db, data?.category), {
           name: data?.name,
-          price: data?.price,
+          price: Number(data?.price),
           category: data?.category,
           inStock: data?.inStock,
           image: snapshot.metadata.name,
           created: Timestamp.now(),
         })
           .then(() => {
-            toast("Your Item Was Added");
+            toast("Your Item Is Added");
             setData(initialState);
           })
           .catch((err) => toast(err));
@@ -96,7 +96,7 @@ function AddItems({ Categories, GetCategories }) {
     <div className="container">
       <ToastContainer />
       <div className="AddItemsForm">
-        <Form onSubmit={onSubmit}>
+        <Form onSubmit={handleSubmit}>
           <Form.Group className="mb-3" controlId="formBasicEmail">
             <Form.Label>Item Name</Form.Label>
             <Form.Control
@@ -105,6 +105,7 @@ function AddItems({ Categories, GetCategories }) {
               name="name"
               value={data.name}
               onChange={handleChange}
+              required
             />
             {/* <Form.Text className="text-muted">
               We'll never share your email with anyone else.
@@ -114,11 +115,12 @@ function AddItems({ Categories, GetCategories }) {
           <Form.Group className="mb-3" controlId="formBasicEmail">
             <Form.Label>Price</Form.Label>
             <Form.Control
-              type="text"
+              type="number"
               placeholder="$XX"
               name="price"
               value={data.price}
               onChange={handleChange}
+              required
             />
           </Form.Group>
 
@@ -155,14 +157,15 @@ function AddItems({ Categories, GetCategories }) {
               onChange={handleChange}
               accept=".jpg,.png,.jpeg"
               required
-              //   value={data.image}
+              key={data.image}
+              // value={data.image}
             />
           </Form.Group>
 
           <Button
             variant="primary"
             type="submit"
-            onClick={() => handleSubmit()}
+            // onClick={() => }
           >
             Submit
           </Button>
