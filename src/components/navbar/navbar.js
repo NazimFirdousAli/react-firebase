@@ -7,10 +7,11 @@ import AddIcon from "../../assests/add.svg";
 
 import logo from "../../assests/logo.png";
 import { withAppContext } from "../../Context";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Contact from "../../pages/categories/contact";
 
 function NavbarMain({ Categories, GetCategories }) {
+  const [openModal, setopenModal] = useState(false);
   useEffect(() => {
     GetCategories();
   }, {});
@@ -42,7 +43,11 @@ function NavbarMain({ Categories, GetCategories }) {
                 );
               })}
             </NavDropdown>
-            <Nav.Link>
+            <Nav.Link
+              onClick={() => {
+                setopenModal(true);
+              }}
+            >
               Contact
               {/* <Contact /> */}
             </Nav.Link>

@@ -8,7 +8,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./addItems.css";
 
-import { collection, addDoc, Timestamp, doc, getDoc } from 'firebase/firestore'
+import { collection, addDoc, Timestamp, doc, getDoc } from "firebase/firestore";
 import { ref, uploadBytes } from "firebase/storage";
 import { useParams } from "react-router-dom";
 import { withAppContext } from "../../Context";
@@ -24,12 +24,12 @@ function AddItems({ Categories, GetCategories }) {
   const [data, setData] = useState(initialState);
   const [inStock, setinStock] = useState(false);
   useEffect(() => {
-    GetCategories()
-  }, [])
+    GetCategories();
+  }, []);
 
   useEffect(() => {
-    setData({ ...data, category: Categories?.[0]?.id })
-  }, [Categories])
+    setData({ ...data, category: Categories?.[0]?.id });
+  }, [Categories]);
 
   const handleChange = (event) => {
     if (event)
@@ -65,30 +65,33 @@ function AddItems({ Categories, GetCategories }) {
 
   const handleSubmit = () => {
     try {
-      const storageRef = ref(storage, `images/${Math.random() * 100} ${data?.image?.name}`);
+      const storageRef = ref(
+        storage,
+        `images/${Math.random() * 100} ${data?.image?.name}`
+      );
 
       uploadBytes(storageRef, data?.image).then(async (snapshot) => {
-        console.log(snapshot.metadata)
+        console.log(snapshot.metadata);
         await addDoc(collection(db, data?.category), {
           name: data?.name,
           price: data?.price,
           category: data?.category,
           inStock: data?.inStock,
           image: snapshot.metadata.name,
-          created: Timestamp.now()
-        }).then(() => {
-          toast("Your Item Was Added")
-          setData(initialState)
-
-        }).catch((err) => toast(err))
+          created: Timestamp.now(),
+        })
+          .then(() => {
+            toast("Your Item Was Added");
+            setData(initialState);
+          })
+          .catch((err) => toast(err));
       });
-
-
     } catch (err) {
-      console.log(err)
-      alert(err)
+      console.log(err);
+      alert(err);
     }
-  }
+    setData(initialState);
+  };
   return (
     <div className="container">
       <ToastContainer />
@@ -127,9 +130,7 @@ function AddItems({ Categories, GetCategories }) {
               value={data.category}
             >
               {Categories?.map((a) => {
-                return (
-                  <option value={a?.id}>{a?.Name}</option>
-                )
+                return <option value={a?.id}>{a?.Name}</option>;
               })}
             </Form.Select>
           </Form.Group>
@@ -154,11 +155,15 @@ function AddItems({ Categories, GetCategories }) {
               onChange={handleChange}
               accept=".jpg,.png,.jpeg"
               required
-            //   value={data.image}
+              //   value={data.image}
             />
           </Form.Group>
 
-          <Button variant="primary" type="submit" onClick={() => handleSubmit()}>
+          <Button
+            variant="primary"
+            type="submit"
+            onClick={() => handleSubmit()}
+          >
             Submit
           </Button>
         </Form>
