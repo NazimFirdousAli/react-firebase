@@ -26,6 +26,7 @@ function UpdateItems() {
   const [inStock, setinStock] = useState(false);
   const { category, id } = useParams();
 
+  const [image, setImage] = useState()
 
   async function GetData() {
 
@@ -42,7 +43,7 @@ function UpdateItems() {
   }
 
   useEffect(() => {
-    GetData()
+    GetData();
   }, { id })
 
 
@@ -79,23 +80,32 @@ function UpdateItems() {
     console.log(data);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     try {
       const storageRef = ref(storage, `images/${Math.random() * 100} ${data?.image?.name}`);
-
-      uploadBytes(storageRef, data?.image).then(async (snapshot) => {
-        console.log(snapshot.metadata)
+      if (image) {
+        uploadBytes(storageRef, image).then(async (snapshot) => {
+          await updateDoc(doc(db, category, id), {
+            name: data?.name,
+            price: data?.price,
+            inStock: data?.inStock,
+            image: snapshot.metadata ? snapshot.metadata.name : data?.image,
+            created: Timestamp.now()
+          }).then(() => {
+            toast("Your Item Was Updated")
+          }).catch((err) => toast(err))
+        });
+      } else {
         await updateDoc(doc(db, category, id), {
           name: data?.name,
           price: data?.price,
           inStock: data?.inStock,
-          image: snapshot.metadata ? snapshot.metadata.name : data?.image,
+          image: data?.image,
           created: Timestamp.now()
         }).then(() => {
           toast("Your Item Was Updated")
         }).catch((err) => toast(err))
-      });
-
+      }
 
     } catch (err) {
       console.log(err)
@@ -163,21 +173,19 @@ function UpdateItems() {
               type="checkbox"
               label="Instock"
               name="inStock"
-              //   value={data.inStock}
-              //   onClick={() => setinStock(!inStock)}
               onChange={handleChange}
             />
           </Form.Group>
 
           <Form.Group controlId="formFile" className="mb-3">
-            <Form.Label>Image Upload</Form.Label>
+            <Form.Label>Image Upload : - {image?.name ? image?.name : data?.image}</Form.Label>
             <Form.Control
               type="file"
               name="image"
-              onChange={handleChange}
+              onChange={(e) => setImage(e.target.files[0])}
               accept=".jpg,.png,.jpeg"
               required
-            //   value={data.image}
+            // value={image}
             />
           </Form.Group>
 

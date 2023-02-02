@@ -71,7 +71,7 @@ function Food() {
                         <Card.Title>{a?.name}</Card.Title>
                       </Card.Body>
                       <ListGroup className="list-group-flush">
-                        <ListGroup.Item>Category: {a?.category}</ListGroup.Item>
+                        <ListGroup.Item>Category: {CategoryName}</ListGroup.Item>
                         <ListGroup.Item>{a?.inStock ? "In " : "Out of "} Stock</ListGroup.Item>
                       </ListGroup>
                     </Card>
