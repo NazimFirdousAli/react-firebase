@@ -12,7 +12,6 @@ import Food1 from "../../assests/food/product1.jpg";
 import Food2 from "../../assests/food/product2.jpg";
 import Food3 from "../../assests/food/product3.jpg";
 
-
 function Belts() {
   return (
     <div>
@@ -28,7 +27,7 @@ function Belts() {
             <Col sm={4}>
               {" "}
               <div className="cardClass">
-                <Card style={{ width: "18rem" }}>
+                <Card style={{ width: "18rem", height: "100px" }}>
                   <Card.Img variant="top" src={Food1} />
                   <Card.Body>
                     <Card.Title>Air Dried Beef</Card.Title>

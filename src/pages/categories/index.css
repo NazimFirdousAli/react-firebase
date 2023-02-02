@@ -54,3 +54,9 @@
 }
 .cardClass {
 }
+.row {
+  justify-content: center;
+}
+.card {
+  margin: 0px auto;
+}

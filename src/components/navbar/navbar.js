@@ -8,12 +8,12 @@ import AddIcon from "../../assests/add.svg";
 import logo from "../../assests/logo.png";
 import { withAppContext } from "../../Context";
 import { useEffect } from "react";
+import Contact from "../../pages/categories/contact";
 
 function NavbarMain({ Categories, GetCategories }) {
-
   useEffect(() => {
-    GetCategories()
-  }, {})
+    GetCategories();
+  }, {});
 
   return (
     <Navbar className="mainNavBar" expand="lg">
@@ -34,13 +34,17 @@ function NavbarMain({ Categories, GetCategories }) {
               {Categories?.map((a) => {
                 return (
                   <div key={a?.id}>
-                    <NavDropdown.Item href={`/category/${a?.id}`}>{a?.Name}</NavDropdown.Item>
+                    <NavDropdown.Item href={`/category/${a?.id}`}>
+                      {a?.Name}
+                    </NavDropdown.Item>
                     <NavDropdown.Divider />
                   </div>
-                )
+                );
               })}
             </NavDropdown>
-            <Nav.Link href="#link">Contact</Nav.Link>
+            <Nav.Link href="#link">
+              <Contact />
+            </Nav.Link>
             <Nav.Link href="/add-items">
               {/* ADD */}
               <img
