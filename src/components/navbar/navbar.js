@@ -42,8 +42,9 @@ function NavbarMain({ Categories, GetCategories }) {
                 );
               })}
             </NavDropdown>
-            <Nav.Link href="#link">
-              <Contact />
+            <Nav.Link>
+              Contact
+              {/* <Contact /> */}
             </Nav.Link>
             <Nav.Link href="/add-items">
               {/* ADD */}

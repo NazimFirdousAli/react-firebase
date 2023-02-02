@@ -78,6 +78,7 @@ function Food() {
                             width: "100%",
                             height: "300px",
                             objectFit: "contain",
+                            cursor: "pointer",
                           }}
                           onClick={() =>
                             history.push(`/update-items/${category}/${a?.id}`)

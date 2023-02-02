@@ -8,11 +8,18 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./updateItems.css";
 
-import { collection, addDoc, Timestamp, doc, getDoc, updateDoc, deleteDoc } from 'firebase/firestore'
+import {
+  collection,
+  addDoc,
+  Timestamp,
+  doc,
+  getDoc,
+  updateDoc,
+  deleteDoc,
+} from "firebase/firestore";
 import { ref, uploadBytes } from "firebase/storage";
 import { useParams } from "react-router-dom";
 import { useHistory } from "react-router-dom";
-
 
 const initialState = {
   name: "",
@@ -26,14 +33,12 @@ function UpdateItems() {
   const [inStock, setinStock] = useState(false);
   const { category, id } = useParams();
 
-
   async function GetData() {
-
     const docRef = doc(db, category, id);
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
-      setData(docSnap.data())
+      setData(docSnap.data());
       console.log("Document data:", docSnap.data());
     } else {
       // doc.data() will be undefined in this case
@@ -41,10 +46,12 @@ function UpdateItems() {
     }
   }
 
-  useEffect(() => {
-    GetData()
-  }, { id })
-
+  useEffect(
+    () => {
+      GetData();
+    },
+    { id }
+  );
 
   const handleChange = (event) => {
     if (event)
@@ -81,41 +88,36 @@ function UpdateItems() {
 
   const handleSubmit = () => {
     try {
-      const storageRef = ref(storage, `images/${Math.random() * 100} ${data?.image?.name}`);
+      const storageRef = ref(
+        storage,
+        `images/${Math.random() * 100} ${data?.image?.name}`
+      );
 
       uploadBytes(storageRef, data?.image).then(async (snapshot) => {
-        console.log(snapshot.metadata)
+        console.log(snapshot.metadata);
         await updateDoc(doc(db, category, id), {
           name: data?.name,
           price: data?.price,
           inStock: data?.inStock,
           image: snapshot.metadata ? snapshot.metadata.name : data?.image,
-          created: Timestamp.now()
-        }).then(() => {
-          toast("Your Item Was Updated")
-        }).catch((err) => toast(err))
+          created: Timestamp.now(),
+        })
+          .then(() => {
+            toast("Your Item Was Updated");
+          })
+          .catch((err) => toast(err));
       });
-
-
     } catch (err) {
-      console.log(err)
-      alert(err)
+      console.log(err);
+      alert(err);
     }
-  }
+  };
   const history = useHistory();
 
   return (
     <div className="container">
       <ToastContainer />
       <div className="updateItemsForm">
-        <Button variant="primary" type="submit" onClick={async () => {
-          await deleteDoc(doc(db, category, id)).then(() => {
-            toast("Item Was Deleted")
-            history.push(`/category/${category}`);
-          }).catch((err) => toast(err));
-        }}>
-          Delete Item
-        </Button>
         <Form onSubmit={onSubmit}>
           <Form.Group className="mb-3" controlId="formBasicEmail">
             <Form.Label>Item Name</Form.Label>
@@ -177,12 +179,32 @@ function UpdateItems() {
               onChange={handleChange}
               accept=".jpg,.png,.jpeg"
               required
-            //   value={data.image}
+              //   value={data.image}
             />
           </Form.Group>
+          <div style={{ display: "flex" }}>
+            <Button
+              variant="primary"
+              type="submit"
+              onClick={() => handleSubmit()}
+            >
+              Submit
+            </Button>
+          </div>
 
-          <Button variant="primary" type="submit" onClick={() => handleSubmit()}>
-            Submit
+          <Button
+            variant="primary"
+            type="submit"
+            onClick={async () => {
+              await deleteDoc(doc(db, category, id))
+                .then(() => {
+                  toast("Item Was Deleted");
+                  history.push(`/category/${category}`);
+                })
+                .catch((err) => toast(err));
+            }}
+          >
+            Delete Item
           </Button>
         </Form>
       </div>
