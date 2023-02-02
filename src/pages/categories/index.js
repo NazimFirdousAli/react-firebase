@@ -15,7 +15,22 @@ import { useHistory } from "react-router-dom";
 function Food() {
   const { category } = useParams()
   const [data, setData] = useState([])
+  const [CategoryName, setCategoryName] = useState([])
 
+
+  async function GetCategoryName() {
+
+    const docRef = doc(db, "Categories", category);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      setCategoryName(docSnap.data()?.Name)
+    }
+  }
+
+  useEffect(() => {
+    GetCategoryName()
+  }, { category })
 
   async function GetData() {
     const docSnap = await getDocs(collection(db, category));
@@ -24,8 +39,6 @@ function Food() {
       if (Product.filter((a) => a?.id == doc?.id).length == 0) {
         Product.push({ id: doc?.id, ...doc.data() })
       }
-      console.log(Product, "Product")
-      console.log(doc?.id, "doc?.id")
     });
     setData(Product)
   }
@@ -39,7 +52,7 @@ function Food() {
   return (
     <div>
       <div className="foodDivBackground">
-        <h1>{category} List</h1>
+        <h1>{CategoryName} List</h1>
       </div>
       <div className="mainDivWave">
         <img src={Wave} alt="wave" />
@@ -49,11 +62,11 @@ function Food() {
           <Row>
             {data?.length > 0 ? data.map((a) => {
               return (
-                <Col sm={4} key={a?.id} onClick={() => history.push(`/update-items/${category}/${a?.id}`)}>
+                <Col sm={4} key={a?.id}>
                   {" "}
-                  <div className="cardClass">
+                  <div className="cardClass" onClick={() => history.push(`/update-items/${category}/${a?.id}`)}>
                     <Card style={{ width: "18rem" }}>
-                      <Card.Img variant="top" src={`https://firebasestorage.googleapis.com/v0/b/dragons-staking-frontend.appspot.com/o/images%2F${a?.image}?alt=media`} />
+                      <Card.Img variant="top" onClick={() => history.push(`/update-items/${category}/${a?.id}`)} src={`https://firebasestorage.googleapis.com/v0/b/dragons-staking-frontend.appspot.com/o/images%2F${a?.image}?alt=media`} />
                       <Card.Body>
                         <Card.Title>{a?.name}</Card.Title>
                       </Card.Body>
@@ -61,7 +74,6 @@ function Food() {
                         <ListGroup.Item>Category: {a?.category}</ListGroup.Item>
                         <ListGroup.Item>{a?.inStock ? "In " : "Out of "} Stock</ListGroup.Item>
                       </ListGroup>
-                      <button onClick={() => history.push(`/update-items/${category}/${a?.id}`)}>Update</button>
                     </Card>
                   </div>
                 </Col>

@@ -11,6 +11,7 @@ import "./addItems.css";
 import { collection, addDoc, Timestamp, doc, getDoc } from 'firebase/firestore'
 import { ref, uploadBytes } from "firebase/storage";
 import { useParams } from "react-router-dom";
+import { withAppContext } from "../../Context";
 
 const initialState = {
   name: "",
@@ -19,10 +20,17 @@ const initialState = {
   inStock: false,
   image: "",
 };
-function AddItems() {
+function AddItems({ Categories, GetCategories }) {
   const [data, setData] = useState(initialState);
   const [inStock, setinStock] = useState(false);
-  
+  useEffect(() => {
+    GetCategories()
+  }, [])
+
+  useEffect(() => {
+    setData({ ...data, category: Categories?.[0]?.id })
+  }, [Categories])
+
   const handleChange = (event) => {
     if (event)
       if (typeof event === "string" || !event) {
@@ -31,7 +39,6 @@ function AddItems() {
         const { name, type, value } = event.target;
         console.log({ type });
         if (type == "file") {
-          // console.log(event.target.files[0])
           setData({
             ...data,
             image: event.target.files[0],
@@ -119,10 +126,11 @@ function AddItems() {
               onChange={handleChange}
               value={data.category}
             >
-              <option>Category</option>
-              <option value="One">One</option>
-              <option value="Two">Two</option>
-              <option value="Three">Three</option>
+              {Categories?.map((a) => {
+                return (
+                  <option value={a?.id}>{a?.Name}</option>
+                )
+              })}
             </Form.Select>
           </Form.Group>
 
@@ -159,4 +167,4 @@ function AddItems() {
   );
 }
 
-export default AddItems;
+export default withAppContext(AddItems);

@@ -6,8 +6,15 @@ import "./navbar.css";
 import AddIcon from "../../assests/add.svg";
 
 import logo from "../../assests/logo.png";
+import { withAppContext } from "../../Context";
+import { useEffect } from "react";
 
-function NavbarMain() {
+function NavbarMain({ Categories, GetCategories }) {
+
+  useEffect(() => {
+    GetCategories()
+  }, {})
+
   return (
     <Navbar className="mainNavBar" expand="lg">
       <Container>
@@ -24,31 +31,14 @@ function NavbarMain() {
               id="basic-nav-dropdown"
               className="navbarCollapse"
             >
-              <div>
-                <NavDropdown.Item href="/category/food">Food</NavDropdown.Item>
-                <NavDropdown.Divider />
-                <NavDropdown.Item href="/category/clothes">
-                  Dress
-                </NavDropdown.Item>
-              </div>
-              <div>
-                <NavDropdown.Item href="/category/belts">
-                  Belts
-                </NavDropdown.Item>
-                <NavDropdown.Divider />
-                <NavDropdown.Item href="/category/shoes">
-                  Shoes
-                </NavDropdown.Item>
-              </div>
-              <div>
-                <NavDropdown.Item href="/category/health-care">
-                  Health care
-                </NavDropdown.Item>
-                <NavDropdown.Divider />
-                <NavDropdown.Item href="/category/others">
-                  Others
-                </NavDropdown.Item>
-              </div>
+              {Categories?.map((a) => {
+                return (
+                  <div key={a?.id}>
+                    <NavDropdown.Item href={`/category/${a?.id}`}>{a?.Name}</NavDropdown.Item>
+                    <NavDropdown.Divider />
+                  </div>
+                )
+              })}
             </NavDropdown>
             <Nav.Link href="#link">Contact</Nav.Link>
             <Nav.Link href="/add-items">
@@ -70,4 +60,4 @@ function NavbarMain() {
   );
 }
 
-export default NavbarMain;
+export default withAppContext(NavbarMain);
