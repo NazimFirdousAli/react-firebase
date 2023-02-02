@@ -84,17 +84,19 @@ function UpdateItems() {
     try {
       const storageRef = ref(storage, `images/${Math.random() * 100} ${data?.image?.name}`);
       if (image) {
-        uploadBytes(storageRef, image).then(async (snapshot) => {
-          await updateDoc(doc(db, category, id), {
-            name: data?.name,
-            price: data?.price,
-            inStock: data?.inStock,
-            image: snapshot.metadata ? snapshot.metadata.name : data?.image,
-            created: Timestamp.now()
-          }).then(() => {
-            toast("Your Item Was Updated")
-          }).catch((err) => toast(err))
-        });
+        deleteObject(storageRef, image).then(() => {
+          uploadBytes(storageRef, image).then(async (snapshot) => {
+            await updateDoc(doc(db, category, id), {
+              name: data?.name,
+              price: data?.price,
+              inStock: data?.inStock,
+              image: snapshot.metadata ? snapshot.metadata.name : data?.image,
+              created: Timestamp.now()
+            }).then(() => {
+              toast("Your Item Was Updated")
+            }).catch((err) => toast(err))
+          });
+        })
       } else {
         await updateDoc(doc(db, category, id), {
           name: data?.name,
