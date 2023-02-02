@@ -8,8 +8,8 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./updateItems.css";
 
-import { collection, addDoc, Timestamp, doc, getDoc, updateDoc, deleteDoc } from 'firebase/firestore'
-import { ref, uploadBytes } from "firebase/storage";
+import { Timestamp, doc, getDoc, updateDoc, deleteDoc } from 'firebase/firestore'
+import { ref, uploadBytes, deleteObject } from "firebase/storage";
 import { useParams } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 
@@ -84,19 +84,17 @@ function UpdateItems() {
     try {
       const storageRef = ref(storage, `images/${Math.random() * 100} ${data?.image?.name}`);
       if (image) {
-        deleteObject(storageRef, image).then(() => {
-          uploadBytes(storageRef, image).then(async (snapshot) => {
-            await updateDoc(doc(db, category, id), {
-              name: data?.name,
-              price: data?.price,
-              inStock: data?.inStock,
-              image: snapshot.metadata ? snapshot.metadata.name : data?.image,
-              created: Timestamp.now()
-            }).then(() => {
-              toast("Your Item Was Updated")
-            }).catch((err) => toast(err))
-          });
-        })
+        uploadBytes(storageRef, image).then(async (snapshot) => {
+          await updateDoc(doc(db, category, id), {
+            name: data?.name,
+            price: data?.price,
+            inStock: data?.inStock,
+            image: snapshot.metadata ? snapshot.metadata.name : data?.image,
+            created: Timestamp.now()
+          }).then(() => {
+            toast("Your Item Was Updated")
+          }).catch((err) => toast(err))
+        });
       } else {
         await updateDoc(doc(db, category, id), {
           name: data?.name,
