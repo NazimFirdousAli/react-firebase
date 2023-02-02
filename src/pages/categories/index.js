@@ -11,10 +11,13 @@ import { db } from "../../firebase.config";
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { useHistory } from "react-router-dom";
 
+import FadeLoader from "react-spinners/FadeLoader";
+
 function Food() {
   const { category } = useParams();
   const [data, setData] = useState([]);
   const [CategoryName, setCategoryName] = useState([]);
+  const [isLoading, setisLoading] = useState(false);
 
   async function GetCategoryName() {
     const docRef = doc(db, "Categories", category);
@@ -41,11 +44,13 @@ function Food() {
       }
     });
     setData(Product);
+    setisLoading(false);
   }
 
   useEffect(() => {
     GetData();
-  }, {});
+    setisLoading(true);
+  }, []);
 
   const history = useHistory();
 
@@ -58,54 +63,62 @@ function Food() {
         <img src={Wave} alt="wave" />
       </div>
       <div className="cardMainClass">
-        <Container>
-          <Row>
-            {data?.length > 0 ? (
-              data.map((a) => {
-                return (
-                  <Col sm={4} key={a?.id}>
-                    {" "}
-                    <div
-                      className="cardClass"
-                      onClick={() =>
-                        history.push(`/update-items/${category}/${a?.id}`)
-                      }
-                    >
-                      <Card style={{ width: "18rem" }}>
-                        <Card.Img
-                          variant="top"
-                          style={{
-                            width: "100%",
-                            height: "300px",
-                            objectFit: "contain",
-                            cursor: "pointer",
-                          }}
-                          onClick={() =>
-                            history.push(`/update-items/${category}/${a?.id}`)
-                          }
-                          src={`https://firebasestorage.googleapis.com/v0/b/dragons-staking-frontend.appspot.com/o/images%2F${a?.image}?alt=media`}
-                        />
-                        <Card.Body>
-                          <Card.Title>{a?.name}</Card.Title>
-                        </Card.Body>
-                        <ListGroup className="list-group-flush">
-                          <ListGroup.Item>
-                            Category: {a?.category}
-                          </ListGroup.Item>
-                          <ListGroup.Item>
-                            {a?.inStock ? "In " : "Out of "} Stock
-                          </ListGroup.Item>
-                        </ListGroup>
-                      </Card>
-                    </div>
-                  </Col>
-                );
-              })
-            ) : (
-              <h1>No Data Found For This Category</h1>
-            )}
-          </Row>
-        </Container>
+        {isLoading ? (
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <FadeLoader color="#6D951A" />
+          </div>
+        ) : (
+          <Container>
+            <Row>
+              {data?.length > 0 ? (
+                data.map((a) => {
+                  return (
+                    <Col sm={4} key={a?.id}>
+                      {" "}
+                      <div
+                        className="cardClass"
+                        onClick={() =>
+                          history.push(`/update-items/${category}/${a?.id}`)
+                        }
+                      >
+                        <Card style={{ width: "18rem" }}>
+                          <Card.Img
+                            variant="top"
+                            style={{
+                              width: "100%",
+                              height: "300px",
+                              objectFit: "contain",
+                              cursor: "pointer",
+                            }}
+                            onClick={() =>
+                              history.push(`/update-items/${category}/${a?.id}`)
+                            }
+                            src={`https://firebasestorage.googleapis.com/v0/b/dragons-staking-frontend.appspot.com/o/images%2F${a?.image}?alt=media`}
+                          />
+                          <Card.Body>
+                            <Card.Title>{a?.name}</Card.Title>
+                          </Card.Body>
+                          <ListGroup className="list-group-flush">
+                            <ListGroup.Item>
+                              Category: {a?.category}
+                            </ListGroup.Item>
+                            <ListGroup.Item>
+                              {a?.inStock ? "In " : "Out of "} Stock
+                            </ListGroup.Item>
+                          </ListGroup>
+                        </Card>
+                      </div>
+                    </Col>
+                  );
+                })
+              ) : (
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                  <h1>No Data Found For This Category</h1>
+                </div>
+              )}
+            </Row>
+          </Container>
+        )}
       </div>
     </div>
   );
