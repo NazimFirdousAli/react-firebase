@@ -42,9 +42,13 @@ function NavbarMain({ Categories, GetCategories }) {
                 );
               })}
             </NavDropdown>
-            <Nav.Link href="#link">
-              <Contact />
-            </Nav.Link>
+            {!localStorage.getItem("token") ?
+              <Nav.Link href="/login">
+                Login/Signup
+              </Nav.Link>
+              : <Nav.Link href="/posts">
+                Posts
+              </Nav.Link>}
             <Nav.Link href="/add-items">
               {/* ADD */}
               <img
@@ -57,6 +61,7 @@ function NavbarMain({ Categories, GetCategories }) {
                 alt="Add"
               />
             </Nav.Link>
+
           </Nav>
         </Navbar.Collapse>
       </Container>

@@ -6,9 +6,13 @@ import firebaseConfig from "./firebase.config";
 
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getAuth } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
+
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -25,6 +29,30 @@ class Firebase {
   }
 
   // AUTH ACTIONS ------------
+
+  async signUp(value) {
+    try {
+
+      const data = createUserWithEmailAndPassword(auth, value.email, value.password)
+      return (data)
+    }
+    catch (err) {
+      throw (err)
+    }
+  }
+
+  async login(value) {
+    try {
+      const user = await signInWithEmailAndPassword(auth, value.email, value.password);
+      localStorage.setItem("token", user.accessToken)
+      return user;
+    } catch (err) {
+      console.error('error', err);
+      throw err; // Rethrow the error to be caught in the onFormSubmit function
+    }
+  }
+
+
 
   addUser = (id, user) => this.db.collection("users").doc(id).set(user);
 
@@ -205,7 +233,7 @@ class Firebase {
 
     return downloadURL;
   };
-  
+
 
   deleteImage = (id) => this.storage.ref("products").child(id).delete();
 
