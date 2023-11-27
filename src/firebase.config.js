@@ -5,20 +5,13 @@ import { getFirestore } from "firebase/firestore";
 import { getStorage,ref  } from "firebase/storage";
 
 const firebaseConfig = {
-  // apiKey: "AIzaSyCMLkDSGY7Ki9nUJzCc1WR8CFG1VUEpM-E",
-  // authDomain: "animalstore-7500e.firebaseapp.com",
-  // projectId: "animalstore-7500e",
-  // storageBucket: "animalstore-7500e.appspot.com",
-  // messagingSenderId: "759768519389",
-  // appId: "1:759768519389:web:f3e0a071dc6fb4dd260134",
-  // measurementId: "G-HEPYWLT4RL",
-  apiKey: "AIzaSyCK21rQiiUhEzBVFhkPvQmfJa7853oMXaY",
-  authDomain: "dragons-staking-frontend.firebaseapp.com",
-  projectId: "dragons-staking-frontend",
-  storageBucket: "dragons-staking-frontend.appspot.com",
-  messagingSenderId: "868896254213",
-  appId: "1:868896254213:web:762feaf5ec4c1b37836f6c",
-  measurementId: "G-CV3QWH2ST7"
+  apiKey: "AIzaSyAGRBR0yhouu7ZOBhUkU98FGUUQf3ixVfA",
+  authDomain: "pet-website-2f3f5.firebaseapp.com",
+  projectId: "pet-website-2f3f5",
+  storageBucket: "pet-website-2f3f5.appspot.com",
+  messagingSenderId: "816098304859",
+  appId: "1:816098304859:web:f95aad30da4e42f664b07e",
+  measurementId: "G-C886XX7782"
 };
 
 export default firebaseConfig;

@@ -82,7 +82,7 @@ function Food() {
                           onClick={() =>
                             history.push(`/update-items/${category}/${a?.id}`)
                           }
-                          src={`https://firebasestorage.googleapis.com/v0/b/dragons-staking-frontend.appspot.com/o/images%2F${a?.image}?alt=media`}
+                          src={`https://firebasestorage.googleapis.com/v0/b/pet-website-2f3f5.appspot.com/o/images%2F${a?.image}?alt=media`}
                         />
                         <Card.Body>
                           <Card.Title>{a?.name}</Card.Title>

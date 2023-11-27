@@ -75,7 +75,7 @@ function Feed() {
                     {data.map((item) => (
                         <Col key={item.id} xs={6} md={4}>
                             <Card style={{ width: '18rem' }}>
-                                <Card.Img style={{ height: "300px", objectFit: "cover" }} variant="top" src={`https://firebasestorage.googleapis.com/v0/b/dragons-staking-frontend.appspot.com/o/images%2F${item.image}?alt=media`} alt="" />
+                                <Card.Img style={{ height: "300px", objectFit: "cover" }} variant="top" src={`https://firebasestorage.googleapis.com/v0/b/pet-website-2f3f5.appspot.com/o/images%2F${item.image}?alt=media`} alt="" />
                                 <Card.Body>
                                     <Card.Title>{item.category}</Card.Title>
                                     <Card.Text>{item.description}</Card.Text>

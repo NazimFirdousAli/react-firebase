@@ -1,28 +1,28 @@
-[debug] [2023-07-28T20:27:16.711Z] ----------------------------------------------------------------------
-[debug] [2023-07-28T20:27:16.713Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\UzI\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy
-[debug] [2023-07-28T20:27:16.714Z] CLI Version:   11.27.0
-[debug] [2023-07-28T20:27:16.714Z] Platform:      win32
-[debug] [2023-07-28T20:27:16.714Z] Node Version:  v18.15.0
-[debug] [2023-07-28T20:27:16.723Z] Time:          Sat Jul 29 2023 01:27:16 GMT+0500 (Pakistan Standard Time)
-[debug] [2023-07-28T20:27:16.723Z] ----------------------------------------------------------------------
+[debug] [2023-11-27T07:55:51.541Z] ----------------------------------------------------------------------
+[debug] [2023-11-27T07:55:51.546Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\UzI\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy
+[debug] [2023-11-27T07:55:51.547Z] CLI Version:   11.27.0
+[debug] [2023-11-27T07:55:51.547Z] Platform:      win32
+[debug] [2023-11-27T07:55:51.547Z] Node Version:  v18.15.0
+[debug] [2023-11-27T07:55:51.550Z] Time:          Mon Nov 27 2023 12:55:51 GMT+0500 (Pakistan Standard Time)
+[debug] [2023-11-27T07:55:51.550Z] ----------------------------------------------------------------------
 [debug] 
-[debug] [2023-07-28T20:27:16.831Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
-[debug] [2023-07-28T20:27:16.831Z] > authorizing via signed-in user (nazim.mandviwala98@gmail.com)
-[debug] [2023-07-28T20:27:16.832Z] [iam] checking project build for permissions ["firebase.projects.get","firebasehosting.sites.update"]
-[debug] [2023-07-28T20:27:16.835Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/build:testIamPermissions [none]
-[debug] [2023-07-28T20:27:16.836Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/build:testIamPermissions x-goog-quota-user=projects/build
-[debug] [2023-07-28T20:27:16.836Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/build:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
-[debug] [2023-07-28T20:27:18.935Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/build:testIamPermissions 200
-[debug] [2023-07-28T20:27:18.936Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/build:testIamPermissions {}
-[debug] [2023-07-28T20:27:18.937Z] [iam] error while checking permissions, command may fail: FirebaseError: Authorization failed. This account is missing the following required permissions on project build:
+[debug] [2023-11-27T07:55:51.723Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-11-27T07:55:51.725Z] > authorizing via signed-in user (nazim.mandviwala98@gmail.com)
+[debug] [2023-11-27T07:55:51.725Z] [iam] checking project build for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2023-11-27T07:55:51.731Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/build:testIamPermissions [none]
+[debug] [2023-11-27T07:55:51.731Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/build:testIamPermissions x-goog-quota-user=projects/build
+[debug] [2023-11-27T07:55:51.732Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/build:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2023-11-27T07:55:53.520Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/build:testIamPermissions 200
+[debug] [2023-11-27T07:55:53.521Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/build:testIamPermissions {}
+[debug] [2023-11-27T07:55:53.523Z] [iam] error while checking permissions, command may fail: FirebaseError: Authorization failed. This account is missing the following required permissions on project build:
 
   firebase.projects.get
   firebasehosting.sites.update
-[debug] [2023-07-28T20:27:18.940Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/build [none]
-[debug] [2023-07-28T20:27:19.636Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/build 403
-[debug] [2023-07-28T20:27:19.636Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/build {"error":{"code":403,"message":"The caller does not have permission","status":"PERMISSION_DENIED"}}
-[debug] [2023-07-28T20:27:19.638Z] HTTP Error: 403, The caller does not have permission
-[debug] [2023-07-28T20:27:20.084Z] FirebaseError: HTTP Error: 403, The caller does not have permission
+[debug] [2023-11-27T07:55:53.527Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/build [none]
+[debug] [2023-11-27T07:55:54.117Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/build 403
+[debug] [2023-11-27T07:55:54.117Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/build {"error":{"code":403,"message":"The caller does not have permission","status":"PERMISSION_DENIED"}}
+[debug] [2023-11-27T07:55:54.120Z] HTTP Error: 403, The caller does not have permission
+[debug] [2023-11-27T07:55:54.523Z] FirebaseError: HTTP Error: 403, The caller does not have permission
     at responseToError (C:\Users\UzI\AppData\Roaming\npm\node_modules\firebase-tools\lib\responseToError.js:49:12)
     at RetryOperation._fn (C:\Users\UzI\AppData\Roaming\npm\node_modules\firebase-tools\lib\apiv2.js:288:77)
     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
