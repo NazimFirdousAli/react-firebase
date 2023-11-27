@@ -1,10 +1,10 @@
-import React from 'react'
-import { useState } from 'react'
-import adduser from '../../firebase'
-import firebaseInstance from '../../firebase'
-import { BrowserRouter as Router, Switch, Route, Link, useHistory } from "react-router-dom";
+import { doc, getDoc } from "firebase/firestore";
+import React, { useState } from 'react';
+import { useHistory } from "react-router-dom";
+import firebaseInstance, { db } from '../../firebase';
 
-import './login.css'
+
+import './login.css';
 
 
 
@@ -27,21 +27,39 @@ function Login() {
 
     const onFormSubmit = async (event) => {
         event.preventDefault()
-        try {
-            const a = await firebaseInstance.login(formValue)
-            toast.success("Login Successfully")
-            console.log(localStorage.getItem("token"))
-            // setTimeout(() => {
-            //     if (a && localStorage.getItem("token")) {
-            //         history.push('/posts')
-            //     }
-            // }, 5000);
+        if (formValue.email.length === 0) {
+            toast.error('Email is Required')
+            return;
         }
-        catch (err) {
-            console.log(err)
-            toast.error("Login Failed")
+        if (!/^\S+@\S+\.\S+$/.test(formValue.email)) {
+            toast.error('Please provide a valid email.');
+            return;
         }
-
+        firebaseInstance.login(formValue)
+            .then(async (cred) => {
+                const token = cred.user.accessToken
+                console.log(token)
+                // const docRef = doc(db, "users", cred.user.uid);
+                // const docSnap = await getDoc(docRef);
+                // const user_data = docSnap.data();
+                localStorage.setItem('token', JSON.stringify(token))
+                // try {
+                //     console.log(docSnap.data());
+                // } catch (error) {
+                //     console.log(error)
+                // }
+                // toast.success("Login Successfully")
+                setTimeout(() => {
+                    if (localStorage.getItem("token")) {
+                        history.push('/posts')
+                    }
+                }, 2000);
+            })
+            .catch(err => {
+                console.log(err)
+                toast.error("Login Failed")
+                return;
+            })
     }
     return (
         <div className="Auth-form-container">

@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Link, Redirect } from "react-router-dom";
 import Home from "../pages/home/home";
 import Category from "../pages/categories/index";
 import Errorpage from "../pages/errorPage/errorpage";
@@ -9,8 +9,10 @@ import AppProvider from "../Context";
 import Login from "../pages/login/login";
 import Signup from '../pages/signup/signup'
 import Feed from "../pages/feed/feed";
+import ProtectedRoutes from "./protectedRoutes";
 
 export default function AppRouting() {
+  const isAuthenticated = !!localStorage.getItem("token"); // Check if token is present in local storage
   return (
     <Router>
       <div>
@@ -32,19 +34,17 @@ export default function AppRouting() {
           <Route exact path="/">
             <Home />
           </Route>
-          {!localStorage.getItem("token") ?
-            <Route path="/login">
-              <Login />
-            </Route> : ""}
-          {!localStorage.getItem("token") ?
-            <Route path="/signup">
-              <Signup />
-            </Route> : ""}
-          {localStorage.getItem("token") ?
-            <Route path="/posts">
-              <Feed />
-            </Route>
-            : ""}
+
+          <Route path="/login">
+            {isAuthenticated ? <Redirect to="/" /> : <Login />}
+          </Route>
+          <Route path="/signup">
+            {isAuthenticated ? <Redirect to="/" /> : <Signup />}
+          </Route>
+          <ProtectedRoutes path="/posts">
+            <Feed />
+          </ProtectedRoutes>
+
           <Route path="*">
             <Errorpage />
           </Route>
